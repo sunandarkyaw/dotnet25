@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Template</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Create Template</h2>
+        <form id="templateForm" action="/create_template" method="post">
+            <div class="mb-3">
+                <label for="templateName" class="form-label">Template Name:</label>
+                <input type="text" class="form-control" id="templateName" name="templateName" required>
+            </div>
+            <div id="fieldsContainer">
+                <!-- Field 1 -->
+                <div class="mb-3">
+                    <label for="fieldName1" class="form-label">Field 1 Name:</label>
+                    <input type="text" class="form-control" id="fieldName1" name="fieldName1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="fieldType1" class="form-label">Field 1 Type:</label>
+                    <select class="form-select" id="fieldType1" name="fieldType1" required>
+                        <option value="Dropdown">Dropdown</option>
+                        <option value="Input Text">Input Text</option>
+                        <option value="Checkbox">Checkbox</option>
+                        <option value="Radio Box">Radio Box</option>
+                    </select>
+                </div>
+                <!-- Add more fields dynamically using JavaScript -->
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addField()">Add Field</button>
+            <button type="button" class="btn btn-success" onclick="saveTemplate()">Save Template</button>
+        </form>
+        <div id="templateOutput" class="mt-4">
+            <!-- Template output will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        function addField() {
+            const fieldsContainer = document.getElementById('fieldsContainer');
+            const fieldNumber = fieldsContainer.children.length / 2 + 1; // Divide by 2 because each field has 2 child elements
+
+            const fieldDiv = document.createElement('div');
+            fieldDiv.classList.add('mb-3');
+
+            const label = document.createElement('label');
+            label.setAttribute('for', `fieldName${fieldNumber}`);
+            label.classList.add('form-label');
+            label.textContent = `Field ${fieldNumber} Name:`;
+
+            const input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.classList.add('form-control');
+            input.setAttribute('id', `fieldName${fieldNumber}`);
+            input.setAttribute('name', `fieldName${fieldNumber}`);
+            input.setAttribute('required', '');
+
+            fieldDiv.appendChild(label);
+            fieldDiv.appendChild(input);
+
+            fieldsContainer.appendChild(fieldDiv);
+
+            const fieldTypeDiv = document.createElement('div');
+            fieldTypeDiv.classList.add('mb-3');
+
+            const typeLabel = document.createElement('label');
+            typeLabel.setAttribute('for', `fieldType${fieldNumber}`);
+            typeLabel.classList.add('form-label');
+            typeLabel.textContent = `Field ${fieldNumber} Type:`;
+
+            const select = document.createElement('select');
+            select.classList.add('form-select');
+            select.setAttribute('id', `fieldType${fieldNumber}`);
+            select.setAttribute('name', `fieldType${fieldNumber}`);
+            select.setAttribute('required', '');
+
+            const optionValues = ['Dropdown', 'Input Text', 'Checkbox', 'Radio Box'];
+            optionValues.forEach(optionValue => {
+                const option = document.createElement('option');
+                option.setAttribute('value', optionValue);
+                option.textContent = optionValue;
+                select.appendChild(option);
+            });
+
+            fieldTypeDiv.appendChild(typeLabel);
+            fieldTypeDiv.appendChild(select);
+
+            fieldsContainer.appendChild(fieldTypeDiv);
+        }
+
+        function saveTemplate() {
+            const templateName = document.getElementById('templateName').value;
+            const fieldsContainer = document.getElementById('fieldsContainer').querySelectorAll('div');
+
+            let template = `<h3>Template: ${templateName}</h3>`;
+            fieldsContainer.forEach((fieldDiv, index) => {
+                const fieldName = fieldDiv.querySelector('input').value;
+                const fieldType = fieldDiv.nextElementSibling.querySelector('select').value;
+                template += `<p>${index + 1}. ${fieldName} (${fieldType})</p>`;
+            });
+
+            document.getElementById('templateOutput').innerHTML = template;
+        }
+    </script>
+</body>
+
+</html>

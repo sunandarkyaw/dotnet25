@@ -7,17 +7,21 @@ namespace SystemAPI.Entity
 {
     public class SensorDbContext : DbContext
     {
-        protected readonly IConfiguration Configuration;
 
-        public SensorDbContext(IConfiguration configuration)
+        public SensorDbContext(DbContextOptions<SensorDbContext> dbContextOptions)
+        : base(dbContextOptions)
         {
-            Configuration = configuration;
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PowerData>().HasNoKey();
+            modelBuilder.Entity<SensorData>()
+       .HasKey(s => s.id);
+            modelBuilder.Entity<SensorData>().Ignore(s => s.data);
         }
 
         public DbSet<SensorData> SensorData { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase"));
     }
 
 }

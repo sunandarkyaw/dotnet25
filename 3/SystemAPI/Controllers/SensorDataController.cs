@@ -7,6 +7,7 @@ namespace SystemAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class SensorDataController : ControllerBase
     {
         private readonly SensorDbContext _context;
@@ -16,8 +17,8 @@ namespace SystemAPI.Controllers
             _context = context;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostSensorData(SensorData data)
+        [HttpPost("PostSensorData")]
+        public async Task<IActionResult> PostSensorData([FromBody] SensorData data)
         {
             try
             {
